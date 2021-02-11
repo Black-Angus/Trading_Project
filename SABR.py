@@ -64,7 +64,7 @@ def SABR_vol_matrix(alpha, beta, rho, nu, F, K, time,
                     MKT):  # F, time and the parameters are vectors, K and MKT are matrices
 
     print(' ')
-    print((2 + ((num_strikes - 1) / 2)) * '       ' + 'SABR VOLATILITIES')
+    print((2 + ((num_strikes - 1) / 2)) , '       ' , 'SABR VOLATILITIES')
     print('  ', '\t', 'strikes:', )
     for i in range(num_strikes):
         print(label_strikes[i], '\t', )
