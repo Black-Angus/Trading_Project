@@ -202,3 +202,11 @@ def rho(S, K, T, r, sigma, option):
         rho = -T * K * np.exp(-r * T) * si.norm.cdf(-d2(S, K, T, r, sigma), 0.0, 1.0)
 
     return rho
+
+def vanna(S, K, T, r, sigma, option):
+    return np.sqrt(T) * si.norm.pdf(d1(S, K, T, r, sigma)) * (1 - d1(S, K, T, r, sigma))
+
+
+def volga(S, K, T, r, sigma, option):
+    return np.sqrt(T) * si.norm.pdf(d1(S, K, T, r, sigma)) * (d1(S, K, T, r, sigma)*d2(S, K, T, r, sigma))/sigma
+
