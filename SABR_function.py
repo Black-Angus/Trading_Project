@@ -126,20 +126,20 @@ def calibration(starting_par, forward, strike, time, market_vol):
         nu[i] = res.x[3]
 
 
-def black_scholes(forward, strike, spot, time, market_vol, type):
+def black_scholes(forward, strike, spot, time, market_vol, option):
     d1 = (np.log(spot / K) + (forward + 0.5 * market_vol ** 2) * time) / (market_vol * np.sqrt(time))
     d2 = d1 - market_vol * np.sqrt(time)
 
-    if type == "call":
+    if option == "call":
         return spot * norm.cdf(d1) - K * np.exp(-forward * time) * \
                norm.cdf(d2)
 
-    elif type == "put":
+    elif option == "put":
         return -spot * norm.cdf(-d1) + strike * np.exp(-forward * time) * \
                norm.cdf(-d2)
 
 
-def black_scholes_matrix(forward, strike, spot, time, market_vol, type):
+def black_scholes_matrix(forward, strike, spot, time, market_vol, option):
     print(' ')
     print((2 + ((num_strikes - 1) / 2)), '       ', 'SABR Price')
     print('  ', '\t', 'Price:')
