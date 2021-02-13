@@ -137,12 +137,12 @@ def black_scholes(forward, strike, spot, time, market_vol, callorput):
     d2 = d1() - market_vol * np.sqrt(time)
 
     if callorput == "call":
-        return spot * norm.cdf(d1()) - K * np.exp(-forward * time) * \
-               norm.cdf(d2())
+        return spot * norm.cdf(d1) - K * np.exp(-forward * time) * \
+               norm.cdf(d2)
 
     elif calorput == "put":
-        return -spot * norm.cdf(-d1()) + strike * np.exp(-forward * time) * \
-               norm.cdf(-d2())
+        return -spot * norm.cdf(-d1) + strike * np.exp(-forward * time) * \
+               norm.cdf(-d2)
 
 
 def black_scholes_matrix(forward, strike, spot, time, market_vol, callorput):
