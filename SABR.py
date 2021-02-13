@@ -106,23 +106,20 @@ def shift(forward, strike):
 
 def objective(par, forward, strike, time, market_vol):
     sum_sq_diff = 0
+    v = (forward * strike[j]) ** ((1 - par[1]) / 2.)
     if strike[0] <= 0:
         shift(forward, strike)
     for j in range(len(strike)):
+        logFK = math.log(forward / strike[j])
+        a, b = formula_vect(par, v, time, logFK)
         if market_vol[j] == 0:
             diff = 0
         elif forward == strike[j]:
-            v = (forward * strike[j]) ** ((1 - par[1]) / 2.)
-            logFK = math.log(forward / strike[j])
-            a, b = formula_vect(par, v, time, logFK)
             vol = (par[0] / v) * a
             diff = vol - market_vol[j]
         elif forward != strike[j]:
-            v = (forward * strike[j]) ** ((1 - par[1]) / 2.)
-            logFK = math.log(forward / strike[j])
             z = (par[3] / par[0]) * v * logFK
             x = math.log((math.sqrt(1 - 2 * par[2] * z + z ** 2) + z - par[2]) / (1 - par[2]))
-            a, b = formula_vect(par, v, time, logFK)
             vol = (par[3] * logFK * a) / (x * b)
             diff = vol - market_vol[j]
         sum_sq_diff = sum_sq_diff + diff ** 2
