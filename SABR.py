@@ -20,21 +20,18 @@ def formula_vect(par, v, time, logFK):
 
 
 def SABR(alpha, beta, rho, nu, forward, strike, time, market_vol):
+    logFK = math.log(forward / strike)
+    v = (forward * strike) ** ((1 - beta) / 2.)
+    a, b = formula(alpha, beta, nu, rho, v, time, logFK)
     if strike <= 0:  # the strike become negative so the smile need to be shifted.
         vol = 0
         diff = 0
     elif forward == strike:  # ATM formula
-        v = (forward * strike) ** ((1 - beta) / 2.)
-        logFK = math.log(forward / strike)
-        a, b = formula(alpha, beta, nu, rho, v, time, logFK)
         vol = (alpha / v) * a
         diff = vol - market_vol
     elif forward != strike:  # not-ATM formula
-        v = (forward * strike) ** ((1 - beta) / 2.)
-        logFK = math.log(forward / strike)
         z = (nu / alpha) * v * logFK
         x = math.log((math.sqrt(1 - 2 * rho * z + z ** 2) + z - rho) / (1 - rho))
-        a, b = formula(alpha, beta, nu, rho, v, time, logFK)
         vol = (nu * logFK * a) / (x * b)
         diff = vol - market_vol
 
