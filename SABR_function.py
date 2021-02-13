@@ -10,7 +10,7 @@ def formula(alpha, beta, nu, rho, v, time, logFK):
     return A, B
 
 
-def SABR(alpha: int, beta: int, rho: int, nu: int, forward: int , strike: int, time: int, market_vol: int):
+def SABR(alpha: float, beta: float, rho: float, nu: float, forward: float , strike: float, time: float, market_vol: int):
 
     logFK = math.log(forward / strike)
     v = (forward * strike) ** ((1 - beta) / 2.)
@@ -36,7 +36,7 @@ def SABR(alpha: int, beta: int, rho: int, nu: int, forward: int , strike: int, t
         vol_diff.write('%r;' % round(diff, 4))
 
 
-def smile(alpha: int, beta: int, rho: int, nu: int, forward: int , strike: list, time: int, market_vol: list, i:int):
+def smile(alpha: float, beta: float, rho: float, nu: float, forward: float , strike: list, time: float, market_vol: list, i:int):
 
     print(label_ten[i], '\t', label_exp[i], '\t')
     outvol.write('%s;%s;' % (label_ten[i], label_exp[i]))
