@@ -12,13 +12,6 @@ def formula(alpha, beta, nu, rho, v, time, logFK):
     return A, B
 
 
-def formula_vect(par, v, time, logFK):
-    A = 1 + (((1 - par[1]) ** 2 * par[0] ** 2) / (24. * (v ** 2)) + (par[0] * par[1] * par[3] * par[2]) / (
-            4. * v) + ((par[3] ** 2) * (2 - 3 * (par[2] ** 2)) / 24.)) * time
-    B = 1 + (1 / 24.) * (((1 - par[1]) * logFK) ** 2) + (1 / 1920.) * (((1 - par[1]) * logFK) ** 4)
-    return A, B
-
-
 def SABR(alpha, beta, rho, nu, forward, strike, time, market_vol):
     logFK = math.log(forward / strike)
     v = (forward * strike) ** ((1 - beta) / 2.)
@@ -111,7 +104,7 @@ def objective(par, forward, strike, time, market_vol):
     for j in range(len(strike)):
         v = (forward * strike[j]) ** ((1 - par[1]) / 2.)
         logFK = math.log(forward / strike[j])
-        a, b = formula_vect(par, v, time, logFK)
+        a, b = formula(par[0], par[1], par[3], par[2], v, time, logFK)
         if market_vol[j] == 0:
             diff = 0
         elif forward == strike[j]:
