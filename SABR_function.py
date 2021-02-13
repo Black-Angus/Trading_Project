@@ -203,10 +203,10 @@ def rho(S, K, T, r, sigma, option):
 
     return rho
 
-def vanna(S, K, T, r, sigma, option):
+def vanna(S, K, T, r, sigma):
     return np.sqrt(T) * si.norm.pdf(d1(S, K, T, r, sigma)) * (1 - d1(S, K, T, r, sigma))
 
 
-def volga(S, K, T, r, sigma, option):
+def volga(S, K, T, r, sigma):
     return np.sqrt(T) * si.norm.pdf(d1(S, K, T, r, sigma)) * (d1(S, K, T, r, sigma)*d2(S, K, T, r, sigma))/sigma
 
