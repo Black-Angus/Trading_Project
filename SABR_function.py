@@ -155,3 +155,50 @@ def black_scholes_matrix(forward, strike, spot, time, market_vol, option):
     print('tenor', '\t', 'expiry')
     for i in range(len(forward)):
         black_scholes(forward[i], strike[i],spot[i], time[i], market_vol[i], type[i])
+
+        def d1(S, K, T, r, sigma):
+    return (np.log(S / K) + (r + 0.5 * sigma ** 2) * T) / (sigma * np.sqrt(T))
+
+
+def d2(S, K, T, r, sigma):
+    return (np.log(S / K) + (r - 0.5 * sigma ** 2) * T) / (sigma * np.sqrt(T))
+
+
+def delta(S, K, T, r, sigma, option):
+    if option == 'call':
+        result = si.norm.cdf(d1(S, K, T, r, sigma), 0.0, 1.0)
+    if option == 'put':
+        result = -si.norm.cdf(-d1(S, K, T, r, sigma), 0.0, 1.0)
+
+    return result
+
+
+def theta(S, K, T, r, sigma, option):
+    if option == 'call':
+        theta = (-sigma * S * si.norm.pdf(d1(S, K, T, r, sigma))) \
+                / (2 * np.sqrt(T)) - r * K * np.exp(-r * T) \
+                * si.norm.cdf(d2(S, K, T, r, sigma), 0.0, 1.0)
+    if option == 'put':
+        theta = (-sigma * S * si.norm.pdf(d1(S, K, T, r, sigma))) \
+                / (2 * np.sqrt(T)) + r * K * np.exp(-r * T) \
+                * si.norm.cdf(-d2(S, K, T, r, sigma), 0.0, 1.0)
+
+    return theta
+
+
+def gamma(S, K, T, r, sigma):
+    return si.norm.pdf(d1(S, K, T, r, sigma)) / (S * sigma * np.sqrt(T))
+
+
+def vega(S, K, T, r, sigma):
+    return S * si.norm.pdf(d1(S, K, T, r, sigma)) * np.sqrt(T)
+
+
+def rho(S, K, T, r, sigma, option):
+
+    if option == 'call':
+        rho = T * K * np.exp(-r * T) * si.norm.cdf(d2(S, K, T, r, sigma), 0.0, 1.0)
+    if option == 'put':
+        rho = -T * K * np.exp(-r * T) * si.norm.cdf(-d2(S, K, T, r, sigma), 0.0, 1.0)
+
+    return rho
