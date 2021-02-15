@@ -1,7 +1,8 @@
 from set_label import *
 import math
-from scipy.stats import norm
+import scipy.stats as si
 from scipy.optimize import minimize
+import sympy as sy
 
 def formula(alpha, beta, nu, rho, v, time, logFK):
     A = 1 + (((1 - beta) ** 2 * alpha ** 2) / (24. * (v ** 2)) +
