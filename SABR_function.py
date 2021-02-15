@@ -126,20 +126,20 @@ def calibration(starting_par, forward, strike, time, market_vol):
         nu[i] = res.x[3]
 
 
-def black_scholes(forward, strike, spot, time, market_vol, option):
-    d1 = (np.log(spot / K) + (forward + 0.5 * market_vol ** 2) * time) / (market_vol * np.sqrt(time))
-    d2 = d1 - market_vol * np.sqrt(time)
+def bachelier(market_vol, spot, strike, forward, time, option):
 
-    if option == "call":
-        return spot * norm.cdf(d1) - K * np.exp(-forward * time) * \
-               norm.cdf(d2)
+    if option == 'call':
+        d = (spot * np.exp(forward * time) - strike) / np.sqrt(market_vol ** 2 / (2 * forward) * (np.exp(2 * forward * time) - 1))
 
-    elif option == "put":
-        return -spot * norm.cdf(-d1) + strike * np.exp(-forward * time) * \
-               norm.cdf(-d2)
+        p = np.exp(-forward * time) * (spot * np.exp(forward * time) - strike) * si.norm.cdf(d) + \
+            np.exp(-forward * time) * np.sqrt(market_vol ** 2 / (2 * forward) * (np.exp(2 * forward * time) - 1)) * si.norm.pdf(d)
+    if option == 'put':
+        p = bachelier(market_vol, spot, strike, forward, time, 'call') - spot + np.exp(-forward * time) * strike
+
+    return p
 
 
-def black_scholes_matrix(forward, strike, spot, time, market_vol, option):
+def bachelier_matrix(forward, strike, spot, time, market_vol, option):
     print(' ')
     print((2 + ((num_strikes - 1) / 2)), '       ', 'SABR Price')
     print('  ', '\t', 'Price:')
@@ -154,9 +154,10 @@ def black_scholes_matrix(forward, strike, spot, time, market_vol, option):
     price.write('\n')
     print('tenor', '\t', 'expiry')
     for i in range(len(forward)):
-        black_scholes(forward[i], strike[i],spot[i], time[i], market_vol[i], type[i])
+        bachelier(forward[i], strike[i], spot[i], time[i], market_vol[i], option[i])
 
-        def d1(S, K, T, r, sigma):
+
+def d1(S, K, T, r, sigma):
     return (np.log(S / K) + (r + 0.5 * sigma ** 2) * T) / (sigma * np.sqrt(T))
 
 
