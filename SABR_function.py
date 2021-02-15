@@ -183,7 +183,7 @@ def theta(S, K, T, r, sigma, option):
 
 
 def gamma(S, K, T, r, sigma):
-    return si.norm.pdf(d1(S, K, T, r, sigma)) / (S * sigma * np.sqrt(T))
+    return sy.diff(delta(S, K, T, r, sigma),S)
 
 
 def vega(S, K, T, r, sigma):
