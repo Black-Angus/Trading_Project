@@ -166,12 +166,7 @@ def d2(S, K, T, r, sigma):
 
 
 def delta(S, K, T, r, sigma, option):
-    if option == 'call':
-        result = si.norm.cdf(d1(S, K, T, r, sigma), 0.0, 1.0)
-    if option == 'put':
-        result = -si.norm.cdf(-d1(S, K, T, r, sigma), 0.0, 1.0)
-
-    return result
+    return sy.diff(bachelier(r,K,S,T,sigma,option),S)
 
 
 def theta(S, K, T, r, sigma, option):
