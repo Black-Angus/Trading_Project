@@ -157,52 +157,60 @@ def bachelier_matrix(forward, strike, spot, time, market_vol, option):
         bachelier(forward[i], strike[i], spot[i], time[i], market_vol[i], option[i])
 
 
-def d1(S, K, T, r, sigma):
-    return (np.log(S / K) + (r + 0.5 * sigma ** 2) * T) / (sigma * np.sqrt(T))
+def d1(spot, strike, time, forward, market_vol):
+    return (np.log(spot / strike) + (forward + 0.5 * market_vol ** 2) * time) / \
+           (market_vol * np.sqrt(time))
 
 
-def d2(S, K, T, r, sigma):
-    return (np.log(S / K) + (r - 0.5 * sigma ** 2) * T) / (sigma * np.sqrt(T))
+def d2(spot, strike, time, forward, market_vol):
+    return (np.log(spot / strike) + (forward - 0.5 * market_vol ** 2) * time) / \
+           (market_vol * np.sqrt(time))
 
 
-def delta(S, K, T, r, sigma, option):
-    return sy.diff(bachelier(r,K,S,T,sigma,option),S)
+def delta(forward, strike, spot, time, market_vol, option):
+    return sy.diff(bachelier(forward, strike, spot, time, market_vol, option), spot)
 
 
-def theta(S, K, T, r, sigma, option):
+def theta(forward, strike, spot, time, market_vol, option):
     if option == 'call':
-        theta = (-sigma * S * si.norm.pdf(d1(S, K, T, r, sigma))) \
-                / (2 * np.sqrt(T)) - r * K * np.exp(-r * T) \
-                * si.norm.cdf(d2(S, K, T, r, sigma), 0.0, 1.0)
+        theta = (-market_vol * spot * si.norm.pdf(d1(spot, strike, time, forward, market_vol))) \
+                / (2 * np.sqrt(time)) - forward * strike * np.exp(-forward * time) \
+                * si.norm.cdf(d2(spot, strike, time, forward, market_vol), 0.0, 1.0)
     if option == 'put':
-        theta = (-sigma * S * si.norm.pdf(d1(S, K, T, r, sigma))) \
-                / (2 * np.sqrt(T)) + r * K * np.exp(-r * T) \
-                * si.norm.cdf(-d2(S, K, T, r, sigma), 0.0, 1.0)
+        theta = (-market_vol * spot * si.norm.pdf(d1(spot, strike, time, forward, market_vol))) \
+                / (2 * np.sqrt(time)) + forward * strike * np.exp(-forward * time) \
+                * si.norm.cdf(-d2(spot, strike, time, forward, market_vol), 0.0, 1.0)
 
     return theta
 
 
-def gamma(S, K, T, r, sigma):
-    return sy.diff(delta(S, K, T, r, sigma),S)
+def gamma(forward, strike, spot, time, market_vol, option):
+    return sy.diff(delta(forward, strike, spot, time, market_vol, option), spot)
 
 
-def vega(S, K, T, r, sigma):
-    return S * si.norm.pdf(d1(S, K, T, r, sigma)) * np.sqrt(T)
+def vega(forward, strike, spot, time, market_vol):
+    return spot * si.norm.pdf(d1(forward, strike, spot, time, market_vol)) * np.sqrt(time)
 
 
-def rho(S, K, T, r, sigma, option):
-
+def rho(forward, strike, spot, time, market_vol, option):
     if option == 'call':
-        rho = T * K * np.exp(-r * T) * si.norm.cdf(d2(S, K, T, r, sigma), 0.0, 1.0)
+        rho = time * strike * np.exp(-forward * time) * si.norm.cdf(d2(forward, strike, spot, time, market_vol), 0.0,
+                                                                    1.0)
     if option == 'put':
-        rho = -T * K * np.exp(-r * T) * si.norm.cdf(-d2(S, K, T, r, sigma), 0.0, 1.0)
+        rho = -time * strike * np.exp(-forward * time) * si.norm.cdf(-d2(forward, strike, spot, time, market_vol), 0.0,
+                                                                     1.0)
 
     return rho
 
-def vanna(S, K, T, r, sigma):
-    return np.sqrt(T) * si.norm.pdf(d1(S, K, T, r, sigma)) * (1 - d1(S, K, T, r, sigma))
+
+def vanna(forward, strike, spot, time, market_vol):
+    return np.sqrt(time) * si.norm.pdf(d1(forward, strike, spot, time, market_vol, )) \
+           * (1 - d1(forward, strike, spot, time, market_vol))
 
 
-def volga(S, K, T, r, sigma):
-    return np.sqrt(T) * si.norm.pdf(d1(S, K, T, r, sigma)) * (d1(S, K, T, r, sigma)*d2(S, K, T, r, sigma))/sigma
+def volga(forward, strike, spot, time, market_vol):
+    return np.sqrt(time) * si.norm.pdf(d1(forward, strike, spot, time, market_vol)) * \
+           (d1(forward, strike, spot, time, market_vol) *
+            d2(forward, strike, spot, time, market_vol)) / market_vol
+
 
