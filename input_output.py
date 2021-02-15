@@ -1,9 +1,17 @@
-#requirements : install openpyxl, pandas
+#requirements : install openpyxl, pandas, numpy
 import pandas as pd
-
+import numpy as np
 #Reading each sheet separately
 df = pd.read_excel("Option_3_DataSet.xlsx", sheet_name='Vol and Swaps Rates usd')
-annuity_df = pd.read_excel("Option_3_DataSet.xlsx", sheet_name='Option_3_DataSet')  # load market data
+
+annuity_df = pd.read_excel("Option_3_DataSet.xlsx", sheet_name='Option_3_DataSet')
+annuity_df = annuity_df.drop('Currency', axis = 1)
+#Editing the columns names beofre setting them
+df.iloc[0] = df.iloc[0].str.replace('USSW', '')
+df.iloc[0] = df.iloc[0].str.replace(' Curncy', '')
+df.iloc[0] = df.iloc[0].str.replace('USSN', '')
+df.iloc[0] = df.iloc[0].str.replace(' CMPN', '')
+
 #Setting the right names for columns
 df.columns = df.iloc[0]
 df = df.rename(columns={'Time\\ Underlying or Vol': 'Time'})
