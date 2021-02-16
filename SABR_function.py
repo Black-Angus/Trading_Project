@@ -27,18 +27,18 @@ def SABR(alpha: float, beta: float, rho: float, nu: float, forward: float , stri
     return vol
 
 
-def smile(alpha: float, beta: float, rho: float, nu: float, forward: float , strike: list, time: float, market_vol: list, i:int):
+def smile(alpha: float, beta: float, rho: float, nu: float, forward: float , strike: list, time: float):
     MKT=()
     for j in range(len(strike)):
         if strike[0] <= 0:
             shift(forward, strike)
-        MKT.append(SABR(alpha, beta, rho, nu, forward, strike[j], time, market_vol[j]))
+        MKT.append(SABR(alpha, beta, rho, nu, forward, strike[j], time))
     return MKT
 
-def SABR_vol_matrix(alpha: list, beta: list, rho: list, nu: list, forward: list, strike: bytearray, time: list, market_vol: bytearray):
+def SABR_vol_matrix(alpha: list, beta: list, rho: list, nu: list, forward: list, strike: bytearray, time: list):
     MKT=[]
     for i in range(len(forward)):
-        MKT.append(smile(alpha[i], beta[i], rho[i], nu[i], forward[i], strike[i], time[i], market_vol[i], i))
+        MKT.append(smile(alpha[i], beta[i], rho[i], nu[i], forward[i], strike[i], time[i]))
     return MKT
 
 def shift(forward, strike):
