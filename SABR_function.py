@@ -2,7 +2,7 @@ import math
 import scipy.stats as si
 from scipy.optimize import minimize
 import sympy as sy
-from set_swaption import *
+from set_parameters import *
 
 
 def formula(alpha, beta, nu, rho, v, time, logFK):
@@ -28,7 +28,7 @@ def SABR(alpha: float, beta: float, rho: float, nu: float, forward: float, strik
 
 
 def smile(alpha: float, beta: float, rho: float, nu: float, forward: float, strike: list, time: float):
-    MKT = ()
+    MKT = []
     for j in range(len(strike)):
         if strike[0] <= 0:
             shift(forward, strike)
@@ -102,7 +102,7 @@ def bachelier(market_vol, spot, strike, forward, time, option):
 
 def bachelier_matrix(forward, strike, spot, time, market_vol, option):
     for i in range(len(forward)):
-        bachelier(forward[i], strike[i], spot[i], time[i], market_vol[i], option[i])
+        bachelier(forward[i], strike[i], spot[i], time[i], market_vol[i], option)
 
 
 def d1(spot, strike, time, forward, market_vol):
