@@ -159,6 +159,7 @@ def volga(forward, strike, spot, time, market_vol):
 
 def maturite(df):
     time=[]
+    tenor=[]
     for col in df.columns:
         if col[0:2]=="0A":
             time.append(1/12)
@@ -170,4 +171,5 @@ def maturite(df):
             time.append(9/12)
         else:
             time.append(int(col[0:2]))
-    return time
+        tenor.append(int(col[2]))
+    return time,tenor
