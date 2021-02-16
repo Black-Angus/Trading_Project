@@ -1,6 +1,7 @@
 import numpy as np
 strike_spreads = []
 
+f = forward()
 # set starting parameters
 starting_guess = np.array([0.001, 0.5, 0, 0.001])
 alpha = len(F) * [starting_guess[0]]
