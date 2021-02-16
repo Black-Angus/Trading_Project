@@ -2,9 +2,9 @@
 import pandas as pd
 import numpy as np
 #Reading each sheet separately
-df = pd.read_excel("Option_3_DataSet.xlsx", sheet_name='Vol and Swaps Rates usd')
+df = pd.read_excel("Option_3_DataSet.xls", sheet_name='Vol and Swaps Rates usd')
 
-annuity_df = pd.read_excel("Option_3_DataSet.xlsx", sheet_name='Option_3_DataSet')
+annuity_df = pd.read_excel("Option_3_DataSet.xls", sheet_name='Option_3_DataSet')
 annuity_df = annuity_df.drop('Currency', axis = 1)
 
 # Preparing fonctions to interpolate annualities
