@@ -2,7 +2,8 @@ import math
 import scipy.stats as si
 from scipy.optimize import minimize
 import sympy as sy
-from set_swaption import*
+from set_swaption import *
+
 
 def formula(alpha, beta, nu, rho, v, time, logFK):
     A = 1 + (((1 - beta) ** 2 * alpha ** 2) / (24. * (v ** 2)) +
@@ -11,8 +12,7 @@ def formula(alpha, beta, nu, rho, v, time, logFK):
     return A, B
 
 
-def SABR(alpha: float, beta: float, rho: float, nu: float, forward: float , strike: float, time: float):
-
+def SABR(alpha: float, beta: float, rho: float, nu: float, forward: float, strike: float, time: float):
     logFK = math.log(forward / strike)
     v = (forward * strike) ** ((1 - beta) / 2.)
     a, b = formula(alpha, beta, nu, rho, v, time, logFK)
@@ -27,19 +27,21 @@ def SABR(alpha: float, beta: float, rho: float, nu: float, forward: float , stri
     return vol
 
 
-def smile(alpha: float, beta: float, rho: float, nu: float, forward: float , strike: list, time: float, market_vol: list, i:int):
-    MKT=()
+def smile(alpha: float, beta: float, rho: float, nu: float, forward: float, strike: list, time: float):
+    MKT = ()
     for j in range(len(strike)):
         if strike[0] <= 0:
             shift(forward, strike)
-        MKT.append(SABR(alpha, beta, rho, nu, forward, strike[j], time, market_vol[j]))
+        MKT.append(SABR(alpha, beta, rho, nu, forward, strike[j], time))
     return MKT
 
-def SABR_vol_matrix(alpha: list, beta: list, rho: list, nu: list, forward: list, strike: bytearray, time: list, market_vol: bytearray):
-    MKT=[]
+
+def SABR_vol_matrix(alpha: list, beta: list, rho: list, nu: list, forward: list, strike: list, time: list):
+    MKT = []
     for i in range(len(forward)):
-        MKT.append(smile(alpha[i], beta[i], rho[i], nu[i], forward[i], strike[i], time[i], market_vol[i], i))
+        MKT.append(smile(alpha[i], beta[i], rho[i], nu[i], forward[i], strike, time[i]))
     return MKT
+
 
 def shift(forward, strike):
     shift = 0.001 - min(strike)
@@ -71,7 +73,7 @@ def objective(par, forward, strike, time, market_vol):
     return obj
 
 
-def calibration(starting_par, forward, strike, time, market_vol):
+def calibration(starting_par, forward, strike, time, market_vol: bytearray):
     for i in range(len(forward)):
         x0 = starting_par
         bnds = ((0.001, None), (0, 1), (-0.999, 0.999), (0.001, None))
@@ -81,15 +83,17 @@ def calibration(starting_par, forward, strike, time, market_vol):
         beta[i] = res.x[1]
         rho[i] = res.x[2]
         nu[i] = res.x[3]
+    return alpha, beta, rho, nu
 
 
 def bachelier(market_vol, spot, strike, forward, time, option):
-
     if option == 'call':
-        d = (spot * np.exp(forward * time) - strike) / np.sqrt(market_vol ** 2 / (2 * forward) * (np.exp(2 * forward * time) - 1))
+        d = (spot * np.exp(forward * time) - strike) / np.sqrt(
+            market_vol ** 2 / (2 * forward) * (np.exp(2 * forward * time) - 1))
 
         p = np.exp(-forward * time) * (spot * np.exp(forward * time) - strike) * si.norm.cdf(d) + \
-            np.exp(-forward * time) * np.sqrt(market_vol ** 2 / (2 * forward) * (np.exp(2 * forward * time) - 1)) * si.norm.pdf(d)
+            np.exp(-forward * time) * np.sqrt(
+            market_vol ** 2 / (2 * forward) * (np.exp(2 * forward * time) - 1)) * si.norm.pdf(d)
     if option == 'put':
         p = bachelier(market_vol, spot, strike, forward, time, 'call') - spot + np.exp(-forward * time) * strike
 
@@ -157,17 +161,24 @@ def volga(forward, strike, spot, time, market_vol):
            (d1(forward, strike, spot, time, market_vol) *
             d2(forward, strike, spot, time, market_vol)) / market_vol
 
+
 def maturite(df):
-    time=[]
+    time = []
+    tenor = []
     for col in df.columns:
-        if col[0:2]=="0A":
-            time.append(1/12)
-        elif col[0:2]=="0C":
-            time.append(3/12)
-        elif col[0:2]=="0F":
-            time.append(6/12)
-        elif col[0:2]=="0I":
-            time.append(9/12)
+        if col[0:2] == "0A":
+            time.append(1 / 12)
+        elif col[0:2] == "0C":
+            time.append(3 / 12)
+        elif col[0:2] == "0F":
+            time.append(6 / 12)
+        elif col[0:2] == "0I":
+            time.append(9 / 12)
         else:
             time.append(int(col[0:2]))
+        tenor.append(int(col[2]))
     return time
+
+
+def vol(df):
+    return df.to_numpy()
