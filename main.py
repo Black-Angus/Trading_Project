@@ -1,7 +1,7 @@
 from SABR_function import *
 from input_output import*
 
-time=maturite(dfvols)
+time,tenor=maturite(dfvols)
 F=forward()
 K=strike[]
 MKT=
