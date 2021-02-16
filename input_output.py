@@ -23,7 +23,7 @@ def interpol(ann1, ann2):
     return (ann1+ann2)/2
 
 
-# Looping on eache expiration to interpolate annuities
+# Looping on each expiration to interpolate annuities
 for expi in ['1M', '3M', '6M', '1Y', '2Y']:
     #3y
     annuity_df = addanuity(annuity_df, expi, '3Y', interpol(getannuity(expi, '1Y', annuity_df), getannuity(expi, '5Y', annuity_df)))
@@ -69,4 +69,4 @@ swaprates = df.iloc[:, :15]
 #Creating a dataset for volatilities
 dfvols = df.iloc[:, 15:211]
 #Journalizing the values
-dfvols = dfvols.applymap(lambda x: np.sqrt(x/252))
+dfvols = dfvols.applymap(lambda x: np.sqrt(x/250))

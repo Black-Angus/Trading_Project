@@ -42,7 +42,7 @@ def SABR_vol_matrix(alpha: list, beta: list, rho: list, nu: list, forward: list,
     return MKT
 
 def shift(forward, strike):
-    shift = 0.001 - strike[0]
+    shift = 0.001 - min(strike)
     for j in range(len(strike)):
         strike[j] = strike[j] + shift
         forward = forward + shift
