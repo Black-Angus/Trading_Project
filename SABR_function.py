@@ -196,6 +196,23 @@ def vega(forward, strike, spot, time, market_vol):
     return spot * si.norm.pdf(d1(forward, strike, spot, time, market_vol)) * np.sqrt(time)
 
 
+def maturite(df):
+    time=[]
+    for col in df.columns:
+        if col[0:2]=="0A":
+            time.append(1/12)
+        elif col[0:2]=="0C":
+            time.append(3/12)
+        elif col[0:2]=="0F":
+            time.append(6/12)
+        elif col[0:2]=="0I":
+            time.append(9/12)
+        else:
+            time.append(int(col[0:2]))
+    return time
+
+
+
 def rho(forward, strike, spot, time, market_vol, option):
     if option == 'call':
         rho = time * strike * np.exp(-forward * time) * si.norm.cdf(d2(forward, strike, spot, time, market_vol), 0.0,
