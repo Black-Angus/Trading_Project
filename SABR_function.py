@@ -10,6 +10,9 @@ def formula(alpha, beta, nu, rho, v, time, logFK):
     B = 1 + (1 / 24.) * (((1 - beta) * logFK) ** 2) + (1 / 1920.) * (((1 - beta) * logFK) ** 4)
     return A, B
 
+def forwardrates(annuities, swaps):
+    
+
 
 def SABR(alpha: float, beta: float, rho: float, nu: float, forward: float , strike: float, time: float, market_vol: int):
 
@@ -213,5 +216,3 @@ def volga(forward, strike, spot, time, market_vol):
     return np.sqrt(time) * si.norm.pdf(d1(forward, strike, spot, time, market_vol)) * \
            (d1(forward, strike, spot, time, market_vol) *
             d2(forward, strike, spot, time, market_vol)) / market_vol
-
-
