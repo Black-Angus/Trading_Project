@@ -1,10 +1,11 @@
 from SABR_function import *
-time = maturite(dfvols)
+from input_output import*
 
-calibration(starting_guess, F, K, expiries, MKT)
+time=maturite(dfvols)
+F=forward()
+K=strike[]
+MKT=
 
-SABR_vol_matrix(alpha, beta, rho, nu, F, K, expiries, MKT)
+calibration(starting_guess, F, K, time, MKT)
 
-outvol.close()
-vol_diff.close()
-parameters.close()
+SABR_vol_matrix(alpha, beta, rho, nu, F, K, time)
