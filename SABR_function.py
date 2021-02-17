@@ -177,7 +177,7 @@ def maturite(df):
         else:
             time.append(int(col[0:2]))
         tenor.append(int(col[2]))
-    return time
+    return time, tenor
 
 
 def vol(df):
